@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Project 1 Part 3 Database tier
+
+Parameters:
+
+  VpcId:
+    Type: String
+    
+  PrivateSubnet1:
+    Type: String
+    
+  PrivateSubnet2:
+    Type: String
+    
+  DBPassword:
+    Type: String
+    NoEcho: true
+    MinLength: 8
+    
+Resources:
+  
+  DBSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: MySQL access for app tier
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 10.50.0.0/16
+          
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties: 
+      DBSubnetGroupDescription: Project1 DB Subnets
+      SubnetIds:
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+        
+  MyDatabase:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: project1db-arun
+      Engine: mysql
+      DBInstanceClass : db.t3.micro
+      AllocatedStorage: 20
+      MasterUsername: admin
+      MasterUserPassword: !Ref DBPassword
+      PubliclyAccessible: false
+      MultiAZ: false
+      BackupRetentionPeriod: 1
+      VPCSecurityGroups:
+        - !Ref DBSG
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      
+      
+Outputs:
+
+  DBEndpoint:
+    Value: !GetAtt MyDatabase.Endpoint.Address
+    
+  DBPort:
+    Value: !GetAtt MyDatabase.Endpoint.Port
+    
+    

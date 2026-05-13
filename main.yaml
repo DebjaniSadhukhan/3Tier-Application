@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+
+  NetworkStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-project1-templates-debjani.s3.ap-south-1.amazonaws.com/project1-part1-network.yaml
+      
+  AppStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-project1-templates-debjani.s3.ap-south-1.amazonaws.com/project1-part2-app.yaml
+      
+  DBStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-project1-templates-debjani.s3.ap-south-1.amazonaws.com/project1-part3-db.yaml
+      
